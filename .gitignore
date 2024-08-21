@@ -78,3 +78,7 @@ crashlytics-build.properties
 /[Aa]ssets/ERP/
 /[Aa]ssets/ERP/*
 .erp
+
+# Github configs
+.github/
+.github/*
