@@ -71,3 +71,7 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Discord Editor Rich Presence
+/[Aa]ssets/,[Ee][Rr][Pp]/
+.[Ee][Rr][Pp]
