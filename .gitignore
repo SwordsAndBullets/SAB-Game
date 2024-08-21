@@ -26,6 +26,7 @@
 # Visual Studio cache directory & config
 .vs/
 *.vsconfig
+.vscode
 
 # Gradle cache directory
 .gradle/
@@ -73,5 +74,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Discord Editor Rich Presence
-/[Aa]ssets/,[Ee][Rr][Pp]/
-.[Ee][Rr][Pp]
+/[Aa]ssets/,ERP/
+.erp
