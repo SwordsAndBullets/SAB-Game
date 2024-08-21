@@ -76,4 +76,5 @@ crashlytics-build.properties
 
 # Discord Editor Rich Presence
 /[Aa]ssets/,ERP/
+/[Aa]ssets/,ERP/*
 .erp
