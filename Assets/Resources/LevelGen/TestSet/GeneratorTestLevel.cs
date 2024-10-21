@@ -17,6 +17,9 @@ public class GeneratorTestLevel : MonoBehaviour
 
     private System.Random rnd;
 
+    [Range(5, 0)]
+    public double ruleSpawnRate = 1;
+
     private void Start()
     {
         rules = Resources.Load("LevelGen/" + GeneratorTileset + "/Rules") as TextAsset;
@@ -107,7 +110,7 @@ public class GeneratorTestLevel : MonoBehaviour
         #endregion
 
         #region Generate Rule
-        for (int i = (GridSize / 3) + 1; i >= 0; i--)
+        for (double i = (GridSize / ruleSpawnRate) + 1; i >= 0; i--)
         {
             Object chosenTile = ruleTiles[rnd.Next(0, ruleTiles.Length)];//Pick Tile
             string prefix = chosenTile.name.Split(',')[0];
@@ -128,7 +131,6 @@ public class GeneratorTestLevel : MonoBehaviour
             //Pick Position
 
             RaycastHit hit;
-            Instantiate(edgeTiles[0], chosenPosition, Quaternion.identity);
             Physics.Raycast(chosenPosition, -Vector3.up, out hit);
             //Find the tile in the chosen position
 
