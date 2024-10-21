@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1636686708471016859}
   - component: {fileID: 4843447589994901004}
   m_Layer: 0
-  m_Name: MiddleTileA
+  m_Name: 1,Blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

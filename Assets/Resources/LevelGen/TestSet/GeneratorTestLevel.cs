@@ -12,11 +12,15 @@ public class GeneratorTestLevel : MonoBehaviour
 
     private Object[] edgeTiles;
     private Object[] normalTiles;
+    private Object[] ruleTiles;
+    private TextAsset rules;
 
     private System.Random rnd;
 
     private void Start()
     {
+        rules = Resources.Load("LevelGen/" + GeneratorTileset + "/Rules") as TextAsset;
+        Debug.Log("Rules: " + rules.text);
         rnd = new System.Random();
         LoadTiles();
         Generate();
@@ -28,16 +32,25 @@ public class GeneratorTestLevel : MonoBehaviour
 
         List<Object> edgeTilesList = new List<Object>();
         List<Object> normalTilesList = new List<Object>();
+        List<Object> ruleTilesList = new List<Object>();
 
+        string x;
         for (int i = 0; i < tiles.Length; i++)
         {
-            switch (tiles[i].name.Split(',')[0])
+            x = tiles[i].name.Split(',')[0];
+            if(rules.text.Contains(x))
             {
-                case "e": edgeTilesList.Add(tiles[i]); break;
-                default: normalTilesList.Add(tiles[i]); break;
+                Debug.Log("Rule Tile Found");
+                ruleTilesList.Add(tiles[i]);
+            }else{
+                switch (x)
+                {
+                    case "e": edgeTilesList.Add(tiles[i]); break;
+                    default: normalTilesList.Add(tiles[i]); break;
+                }
             }
         }
-
+        ruleTiles = ruleTilesList.ToArray();
         edgeTiles = edgeTilesList.ToArray();
         normalTiles = normalTilesList.ToArray();
     }
@@ -78,17 +91,17 @@ public class GeneratorTestLevel : MonoBehaviour
         }
         for (int i = (GridSize * 2) + 1; i >= 0; i--)
         {
-            Instantiate(tiles[0], new Vector3(currentX, 0, currentY), Quaternion.identity);
+            Instantiate(edgeTiles[0], new Vector3(currentX, 0, currentY), Quaternion.identity);
             currentY -= CellSize;
         }
         for (int i = (GridSize * 2) + 1; i >= 0; i--)
         {
-            Instantiate(tiles[0], new Vector3(currentX, 0, currentY), Quaternion.identity);
+            Instantiate(edgeTiles[0], new Vector3(currentX, 0, currentY), Quaternion.identity);
             currentX -= CellSize;
         }
         for (int i = (GridSize * 2) + 1; i >= 0; i--)
         {
-            Instantiate(tiles[0], new Vector3(currentX, 0, currentY), Quaternion.identity);
+            Instantiate(edgeTiles[0], new Vector3(currentX, 0, currentY), Quaternion.identity);
             currentY += CellSize;
         }
         #endregion
