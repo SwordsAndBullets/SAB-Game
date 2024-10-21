@@ -105,5 +105,39 @@ public class GeneratorTestLevel : MonoBehaviour
             currentY += CellSize;
         }
         #endregion
+
+        #region Generate Rule
+        for (int i = (GridSize / 3) + 1; i >= 0; i--)
+        {
+            Object chosenTile = ruleTiles[rnd.Next(0, ruleTiles.Length)];//Pick Tile
+            string prefix = chosenTile.name.Split(',')[0];
+            string[] rulesA = rules.text.Split(',');
+            int ruleIndex = 1;
+            for (int j = rulesA.Length - 1; j >= 0; j--)
+            {
+                if (rulesA[j] == prefix)
+                {
+                    ruleIndex = j + 1;
+                    j = 0;
+                }
+            }//Match tile name to its rule
+
+            currentX = rnd.Next(0 - (GridSize), (GridSize)) * CellSize;
+            currentY = rnd.Next(0 - (GridSize), (GridSize)) * CellSize;
+            Vector3 chosenPosition = new Vector3(currentX, 10, currentY);
+            //Pick Position
+
+            RaycastHit hit;
+            Instantiate(edgeTiles[0], chosenPosition, Quaternion.identity);
+            Physics.Raycast(chosenPosition, -Vector3.up, out hit);
+            //Find the tile in the chosen position
+
+            if (ruleIndex.ToString() == hit.transform.name.Split(',')[0])
+            {
+                Destroy(hit.collider.gameObject);
+                Instantiate(chosenTile, chosenPosition - (Vector3.up * 10), Quaternion.identity);
+            }//Swap out current tile if it fits the rule
+        }
+        #endregion
     }
 }

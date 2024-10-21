@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3825627187025518117}
   - component: {fileID: 9624028545640463}
   m_Layer: 0
-  m_Name: a,RuleTileA
+  m_Name: b,RuleTileB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7d6ab2ed6b89ee446a476a9d03f0ea53, type: 2}
+  - {fileID: 2100000, guid: 02c50ea5d21135a49a3105ecc3e5e1e0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
