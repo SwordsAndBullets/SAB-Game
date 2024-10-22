@@ -443,7 +443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 456659009352224271, guid: 42320d78862a4594a8550fb44673d207, type: 3}
       propertyPath: GridSize
-      value: 5
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 456659009352224271, guid: 42320d78862a4594a8550fb44673d207, type: 3}
       propertyPath: SpawnTile
@@ -451,7 +451,7 @@ PrefabInstance:
       objectReference: {fileID: 9221965076819367817}
     - target: {fileID: 456659009352224271, guid: 42320d78862a4594a8550fb44673d207, type: 3}
       propertyPath: ruleSpawnRate
-      value: 0.5299999713897705
+      value: 0.23000000417232513
       objectReference: {fileID: 0}
     - target: {fileID: 456659009352224271, guid: 42320d78862a4594a8550fb44673d207, type: 3}
       propertyPath: GeneratorTileset
