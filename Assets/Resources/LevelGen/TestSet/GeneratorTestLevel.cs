@@ -130,15 +130,44 @@ public class GeneratorTestLevel : MonoBehaviour
             Vector3 chosenPosition = new Vector3(currentX, 10, currentY);
             //Pick Position
 
-            RaycastHit hit;
-            Physics.Raycast(chosenPosition, -Vector3.up, out hit);
+            RaycastHit hitTop;
+            Physics.Raycast(chosenPosition + new Vector3(0, 0, CellSize), -Vector3.up, out hitTop);
+            RaycastHit hitRight;
+            Physics.Raycast(chosenPosition + new Vector3(CellSize, 0, 0), -Vector3.up, out hitRight);
+            RaycastHit hitBottom;
+            Physics.Raycast(chosenPosition + new Vector3(0, 0, -CellSize), -Vector3.up, out hitBottom);
+            RaycastHit hitLeft;
+            Physics.Raycast(chosenPosition + new Vector3(-CellSize, 0, 0), -Vector3.up, out hitLeft);
             //Find the tile in the chosen position
 
-            if (ruleIndex.ToString() == hit.transform.name.Split(',')[0])
+            int adjacentMatches = 0;
+            if (ruleIndex.ToString() == hitTop.transform.name.Split(',')[0])
             {
+                adjacentMatches += 1;
+            }
+            if (ruleIndex.ToString() == hitRight.transform.name.Split(',')[0])
+            {
+                adjacentMatches += 1;
+            }
+            if (ruleIndex.ToString() == hitBottom.transform.name.Split(',')[0])
+            {
+                adjacentMatches += 1;
+            }
+            if (ruleIndex.ToString() == hitLeft.transform.name.Split(',')[0])
+            {
+                adjacentMatches += 1;
+            }
+
+            if (adjacentMatches >= 2)
+            {
+                Debug.Log("Matches, creating rule tile.");
+                RaycastHit hit;
+                Physics.Raycast(chosenPosition, -Vector3.up, out hit);
                 Destroy(hit.collider.gameObject);
                 Instantiate(chosenTile, chosenPosition - (Vector3.up * 10), Quaternion.identity);
-            }//Swap out current tile if it fits the rule
+                Debug.Log("Rule tile created.");
+                //Swap out current tile if it fits the rule
+            }
         }
         #endregion
     }
