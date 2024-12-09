@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BasicPathing : MonoBehaviour
 {
+    [SerializeField] private Transform player;
+    [SerializeField] private Entity playerEntity;
+
     [Header("Layers")]
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private LayerMask walkableLayer;
@@ -13,25 +16,31 @@ public class BasicPathing : MonoBehaviour
     private float groundLevel;
 
     [Header("States")]
-    private int state = 0; //0-Patrolling, 1-Chasing, 2-Attacking
+    public int state = 0; //0-Patrolling, 1-Chasing, 2-Attacking
 
-    [Header("Patrolling")]
+    [Header("0-Patrolling")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float moveRange;
     private Vector3 movePoint;
     private Vector3 point;
     private bool movePointSet;
 
-    [Header("Chasing")]
+    [Header("1-Chasing")]
     [SerializeField] private float detectionRange;
     [SerializeField] private float chaseSpeed;
     private Vector3 playerLastPosition;
+    private Vector3 playerPos = new Vector3(0,0,0);
+    private bool playerPosKnown = false;
+
+    [Header("2-Attacking")]
+    [SerializeField] private Item equippedItem;
 
     private void Update() {
         SetGroundLevel();
         switch (state){
             case 0: Patrolling(); break;
             case 1: Chasing(); break;
+            case 2: Attacking(); break;
         }
     }
 
@@ -68,28 +77,25 @@ public class BasicPathing : MonoBehaviour
 
     #region Chasing
     private void Chasing(){
-        Vector3 playerPos = GetPlayerPosition();
-        if(playerPos != null){
-            switch (GetPlayerLineOfSight()){
+        if(Physics.CheckSphere(transform.position, detectionRange, playerLayer)){
+            playerPos = player.transform.position;
+            playerPosKnown = true;
+        }else{
+            playerPosKnown = false;
+        }
+        if(playerPosKnown){
+            transform.LookAt(playerPos);
+            switch (GetPlayerLineOfSight(playerPos)){
                 case true:
-                    transform.LookAt(playerPos);
                     transform.position = Vector3.MoveTowards(transform.position, new Vector3(playerPos.x, groundLevel, playerPos.z), chaseSpeed * Time.deltaTime);
                     break;
                 case false:
-                    Debug.Log("No Player Line of Sight");
                     Patrolling();
+                    break;
             }
-            Debug.Log("No Player in Range");
+        }else{
             state = 0;
             Patrolling();
-        }
-    }
-    private Vector3 GetPlayerPosition(){
-        RaycastHit detectedPlayer;
-        if(Physics.CheckSphere(transform.position, Vector3.up, out detectedPlayer, detectionRange, playerLayer)){
-            return detectedPlayer.transform.position;
-        }else{
-            return null;
         }
     }
     private bool GetPlayerLineOfSight(Vector3 playerPosition){
@@ -97,9 +103,16 @@ public class BasicPathing : MonoBehaviour
     }
     #endregion
 
+    #region Attacking
+    private void Attacking(){
+        Debug.Log("Attacking");
+        equippedItem.Use(playerEntity);
+    }
+    #endregion
+
     private void SetGroundLevel(){
         RaycastHit hit;
-        Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, walkableLayer);
+        Physics.Raycast(transform.position + new Vector3(0,0.1f,0), Vector3.down, out hit, Mathf.Infinity, walkableLayer);
         groundLevel = hit.transform.position.y;
     }
 }
