@@ -47,14 +47,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09552dd237da2534b9bafd8d563dbb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 512
   walkableLayer:
     serializedVersion: 2
     m_Bits: 256
+  visualLayer:
+    serializedVersion: 2
+    m_Bits: 840
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  state: 1
   moveSpeed: 5
   moveRange: 20
+  detectionRange: 15
+  chaseSpeed: 5
+  item: {fileID: 0}
 --- !u!136 &5034279502898448801
 CapsuleCollider:
   m_ObjectHideFlags: 0

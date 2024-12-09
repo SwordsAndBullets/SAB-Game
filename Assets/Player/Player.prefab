@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 213757026412541310}
   - component: {fileID: 213757026412541184}
   - component: {fileID: 213757026412541187}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -389,7 +389,7 @@ MonoBehaviour:
   password: 
   id: 0
   xp: 0
-  webFunctions: {fileID: 0}
+  wf: {fileID: 0}
 --- !u!114 &213757026412541188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 832
   baseSpeed: 5
   baseJump: 400
 --- !u!114 &213757026412541185
@@ -450,7 +450,7 @@ MonoBehaviour:
   ability1Charge: 0
   ability2Charge: 0
   strength: 0
-  agility: 0
+  agility: 1
   armament: 0
   burning: 0
   weakened: 0
