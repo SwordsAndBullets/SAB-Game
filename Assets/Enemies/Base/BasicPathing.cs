@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class BasicPathing : MonoBehaviour
 {
+    [Header("Layers")]
     [SerializeField] private LayerMask obstacleLayer;
     [SerializeField] private LayerMask walkableLayer;
+    [SerializeField] private LayerMask visualLayer;
+    [SerializeField] private LayerMask playerLayer;
+
+    private float groundLevel;
+
+    [Header("States")]
+    private int state = 0; //0-Patrolling, 1-Chasing, 2-Attacking
 
     [Header("Patrolling")]
     [SerializeField] private float moveSpeed;
@@ -14,8 +22,17 @@ public class BasicPathing : MonoBehaviour
     private Vector3 point;
     private bool movePointSet;
 
+    [Header("Chasing")]
+    [SerializeField] private float detectionRange;
+    [SerializeField] private float chaseSpeed;
+    private Vector3 playerLastPosition;
+
     private void Update() {
-        Patrolling();   
+        SetGroundLevel();
+        switch (state){
+            case 0: Patrolling(); break;
+            case 1: Chasing(); break;
+        }
     }
 
     #region Patrolling
@@ -25,9 +42,6 @@ public class BasicPathing : MonoBehaviour
         }
 
         transform.LookAt(movePoint);
-        RaycastHit hit;
-        Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, walkableLayer);
-        float groundLevel = hit.transform.position.y;
         transform.position = Vector3.MoveTowards(transform.position, new Vector3(movePoint.x, groundLevel, movePoint.z), moveSpeed * Time.deltaTime);
 
         if(Vector3.Distance(transform.position, movePoint) < 1f){
@@ -51,4 +65,41 @@ public class BasicPathing : MonoBehaviour
         }
     }
     #endregion
+
+    #region Chasing
+    private void Chasing(){
+        Vector3 playerPos = GetPlayerPosition();
+        if(playerPos != null){
+            switch (GetPlayerLineOfSight()){
+                case true:
+                    transform.LookAt(playerPos);
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(playerPos.x, groundLevel, playerPos.z), chaseSpeed * Time.deltaTime);
+                    break;
+                case false:
+                    Debug.Log("No Player Line of Sight");
+                    Patrolling();
+            }
+            Debug.Log("No Player in Range");
+            state = 0;
+            Patrolling();
+        }
+    }
+    private Vector3 GetPlayerPosition(){
+        RaycastHit detectedPlayer;
+        if(Physics.CheckSphere(transform.position, Vector3.up, out detectedPlayer, detectionRange, playerLayer)){
+            return detectedPlayer.transform.position;
+        }else{
+            return null;
+        }
+    }
+    private bool GetPlayerLineOfSight(Vector3 playerPosition){
+        return Physics.Raycast(transform.position, transform.rotation * Vector3.forward, Mathf.Infinity, visualLayer);
+    }
+    #endregion
+
+    private void SetGroundLevel(){
+        RaycastHit hit;
+        Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, walkableLayer);
+        groundLevel = hit.transform.position.y;
+    }
 }
