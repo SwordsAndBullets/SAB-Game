@@ -29,7 +29,6 @@ public class BasicPathing : MonoBehaviour
     [SerializeField] private float detectionRange;
     [SerializeField] private float chaseSpeed;
     private Vector3 playerLastPosition;
-    private Vector3 playerPos = new Vector3(0,0,0);
     private bool playerPosKnown = false;
 
     [Header("2-Attacking")]
@@ -77,30 +76,20 @@ public class BasicPathing : MonoBehaviour
 
     #region Chasing
     private void Chasing(){
-        if(Physics.CheckSphere(transform.position, detectionRange, playerLayer)){
-            playerPos = player.transform.position;
-            playerPosKnown = true;
-        }else{
-            playerPosKnown = false;
-        }
-        if(playerPosKnown){
-            transform.LookAt(playerPos);
-            switch (GetPlayerLineOfSight(playerPos)){
-                case true:
-                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(playerPos.x, groundLevel, playerPos.z), chaseSpeed * Time.deltaTime);
-                    break;
-                case false:
-                    Patrolling();
-                    break;
+        float playerDistance = Mathf.Sqrt(Mathf.Pow(player.position.x - transform.position.x, 2.0f) + Mathf.Pow(player.position.z - transform.position.z));//2D
+        playerDistance = Mathf.Sqrt(Mathf.Pow(playerDistance) + Mathf.Pow(player.position.y - transform.position.y));//3D
+        //Get Distance of player from enemy, use 3D pythagoras.
+
+        if(playerDistance <= detectionRange){
+            Quaternion rotation = transform.rotation;
+            transform.LookAt(player);
+            RaycastHit hit;
+            bool lineOfSight = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, out hit, Mathf.Infinity);
+            if(hit.transform.gameObject.layer == playerLayer){
+                playerLastPosition = player.position;
             }
-        }else{
-            state = 0;
-            Patrolling();
+            transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
         }
-    }
-    private bool GetPlayerLineOfSight(Vector3 playerPosition){
-        return Physics.Raycast(transform.position, transform.rotation * Vector3.forward, Mathf.Infinity, visualLayer);
-    }
     #endregion
 
     #region Attacking
