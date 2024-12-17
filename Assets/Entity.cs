@@ -1,30 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
-    #region[data]
-    [Header("----Stats----")]
-    public int level;
-    public int health;
+    [Header("Entity Stats")]
+    public float health { get; set{ ChangeHealth(value); }}
+    [SerializeField] private 
 
-    [Header("----Abilities----")]
-    public int ability1Charge;//On player :: Grenade
-    public int ability2Charge;//On player :: Melee
+    [Header("Core Stats")]
+    public float speed { get; protected set; }//Movement speed etc
+    public float strength {get; protected set;}//Melee multiplier
+    public float Distance {get; protected set;}//Distance stat
 
-    [Header("----Ability Recharges----")]
-    public int strength; //melee cooldown
-    public int agility; //speed + reload speed
-    public int armament; //grenade cooldown
-
-    [Header("----Keywords----")]
-    public bool burning;
-    public bool weakened;
-    public bool frozen;
-    #endregion
-
-    [Header("----References----")]
-    private Item[] armourItems;
-    private Item[] weaponItems;
+    public void ChangeHealth(float amount){
+        Debug.Log("Taking " + amount + " damage!");
+        health = amount;
+        Debug.Log("Health: " + this.health);
+    }
 }
