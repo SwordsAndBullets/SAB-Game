@@ -78,9 +78,9 @@ public class BasicPathing : MonoBehaviour
         }
     }
     private void CheckObstaclesInFront(float range){
-        Quaternion rotation = transfrom.rotation;
+        Quaternion rotation = transform.rotation;
         transform.LookAt(playerPos);
-        bool result = Physics.Raycast(transform.position.x, transform.rotation * Vector3.forward, range, obstacleLayer);
+        bool result = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, range, obstacleLayer);
         transform.rotation = rotation;
         return result;
     }//Check for obstacles in obstacle layer in front of self by specified range.
@@ -114,6 +114,6 @@ public class BasicPathing : MonoBehaviour
     private void SetGroundLevel(){
         RaycastHit hit;
         Physics.Raycast(transform.position + new Vector3(0,0.1f,0), Vector3.down, out hit, Mathf.Infinity, walkableLayer);
-        groundLevel = hit.transform.position.y;
+        groundLevel = hit.point.y;
     }
 }
