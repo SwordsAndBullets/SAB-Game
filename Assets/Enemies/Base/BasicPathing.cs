@@ -36,6 +36,10 @@ public class BasicPathing : MonoBehaviour
 
     private void Update() {
         SetGroundLevel();
+        float playerDistance = Vector3.Distance(transform.position, player.position);
+        try { state = (playerDistance <= detectionRange) ? (playerDistance <= equippedItem.distance) ? 2 : 1 : 0; }
+        catch { state = (playerDistance <= detectionRange) ? 1 : 0; }
+
         switch (state){
             case 0: Patrolling(); break;
             case 1: Chasing(); break;
@@ -46,7 +50,7 @@ public class BasicPathing : MonoBehaviour
     #region Patrolling
     private void Patrolling(){
         if(CheckObstaclesInFront(3.0f)){
-            Debug.Log("Obstacle; recalculating route.")
+            Debug.Log("Obstacle; recalculating route.");
             movePointSet = false;
         }//Check for obstacles in front of it. Not needed when chasing as it only chases with direct line of sight and not needed when attacking as it stays still.
 
@@ -77,9 +81,9 @@ public class BasicPathing : MonoBehaviour
             }//Check if point inside obstacle
         }
     }
-    private void CheckObstaclesInFront(float range){
+    private bool CheckObstaclesInFront(float range){
         Quaternion rotation = transform.rotation;
-        transform.LookAt(playerPos);
+        transform.LookAt(playerLastPosition);
         bool result = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, range, obstacleLayer);
         transform.rotation = rotation;
         return result;
@@ -88,8 +92,7 @@ public class BasicPathing : MonoBehaviour
 
     #region Chasing
     private void Chasing(){
-        float playerDistance = Mathf.Sqrt(Mathf.Pow(player.position.x - transform.position.x, 2.0f) + Mathf.Pow(player.position.z - transform.position.z));//2D
-        playerDistance = Mathf.Sqrt(Mathf.Pow(playerDistance) + Mathf.Pow(player.position.y - transform.position.y));//3D
+        float playerDistance = Vector3.Distance(transform.position, player.position);
         //Get Distance of player from enemy, use 3D pythagoras.
 
         if(playerDistance <= detectionRange){
@@ -102,6 +105,7 @@ public class BasicPathing : MonoBehaviour
             }
             transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
         }
+    }
     #endregion
 
     #region Attacking
