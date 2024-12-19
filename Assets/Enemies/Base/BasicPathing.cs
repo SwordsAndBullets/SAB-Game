@@ -45,22 +45,27 @@ public class BasicPathing : MonoBehaviour
 
     #region Patrolling
     private void Patrolling(){
+        if(CheckObstaclesInFront(3.0f)){
+            Debug.Log("Obstacle; recalculating route.")
+            movePointSet = false;
+        }//Check for obstacles in front of it. Not needed when chasing as it only chases with direct line of sight and not needed when attacking as it stays still.
+
+        if(Vector3.Distance(transform.position, movePoint) < 1f){
+            movePointSet = false;
+        }//Unset point to find a new walk point when within a certain range of it.
+
         if(!movePointSet){
             SetWalkPoint();
         }
 
         transform.LookAt(movePoint);
         transform.position = Vector3.MoveTowards(transform.position, new Vector3(movePoint.x, groundLevel, movePoint.z), moveSpeed * Time.deltaTime);
-
-        if(Vector3.Distance(transform.position, movePoint) < 1f){
-            movePointSet = false;
-        }
+        //Move
     }
     private void SetWalkPoint(){
         while(!movePointSet){
             float randomX = Random.Range((transform.position.x - moveRange), (transform.position.x + moveRange));//Gen Random X
             float randomZ = Random.Range((transform.position.z - moveRange), (transform.position.z + moveRange));//Gen Random Z
-
             RaycastHit hit;
             point = new Vector3(randomX, transform.position.y + 10f, randomZ);
             Physics.Raycast(point, Vector3.down, out hit, Mathf.Infinity, walkableLayer);//Find Y Level of AI walkable ground
@@ -72,6 +77,13 @@ public class BasicPathing : MonoBehaviour
             }//Check if point inside obstacle
         }
     }
+    private void CheckObstaclesInFront(float range){
+        Quaternion rotation = transfrom.rotation;
+        transform.LookAt(playerPos);
+        bool result = Physics.Raycast(transform.position.x, transform.rotation * Vector3.forward, range, obstacleLayer);
+        transform.rotation = rotation;
+        return result;
+    }//Check for obstacles in obstacle layer in front of self by specified range.
     #endregion
 
     #region Chasing
