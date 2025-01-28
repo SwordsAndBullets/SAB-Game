@@ -92,16 +92,14 @@ public class BasicPathing : MonoBehaviour
 
     #region Chasing
     private void Chasing(){
-        if(playerDistance <= detectionRange){
-            Quaternion rotation = transform.rotation;
-            transform.LookAt(player);
-            RaycastHit hit;
-            bool lineOfSight = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, out hit, Mathf.Infinity);
-            if(hit.transform.gameObject.layer == playerLayer){
-                playerLastPosition = player.position;
-            }
-            transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
+        Quaternion rotation = transform.rotation;
+        transform.LookAt(player);
+        RaycastHit hit;
+        bool lineOfSight = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, out hit, Mathf.Infinity);
+        if(hit.transform.gameObject.layer == playerLayer){
+            playerLastPosition = player.position;
         }
+        transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
     }
     #endregion
 
