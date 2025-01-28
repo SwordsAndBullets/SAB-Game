@@ -92,9 +92,6 @@ public class BasicPathing : MonoBehaviour
 
     #region Chasing
     private void Chasing(){
-        float playerDistance = Vector3.Distance(transform.position, player.position);
-        //Get Distance of player from enemy, use 3D pythagoras.
-
         if(playerDistance <= detectionRange){
             Quaternion rotation = transform.rotation;
             transform.LookAt(player);
