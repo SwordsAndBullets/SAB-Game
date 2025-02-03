@@ -6,6 +6,7 @@ public class BasicPathing : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [SerializeField] private Entity playerEntity;
+    private float playerDistance;
 
     [Header("Layers")]
     [SerializeField] private LayerMask obstacleLayer;
@@ -36,8 +37,8 @@ public class BasicPathing : MonoBehaviour
 
     private void Update() {
         SetGroundLevel();
-        float playerDistance = Vector3.Distance(transform.position, player.position);
-        try { state = (playerDistance <= detectionRange) ? (playerDistance <= equippedItem.distance) ? 2 : 1 : 0; }
+        playerDistance = Vector3.Distance(transform.position, player.position);
+        try { state = (playerDistance <= detectionRange) ? ((playerDistance <= equippedItem.distance) || (playerDistance <= 1)) ? 2 : 1 : 0; }
         catch { state = (playerDistance <= detectionRange) ? 1 : 0; }
 
         switch (state){
@@ -92,14 +93,23 @@ public class BasicPathing : MonoBehaviour
 
     #region Chasing
     private void Chasing(){
-        Quaternion rotation = transform.rotation;
-        transform.LookAt(player);
-        RaycastHit hit;
-        bool lineOfSight = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, out hit, Mathf.Infinity);
-        if(hit.transform.gameObject.layer == playerLayer){
-            playerLastPosition = player.position;
+        if(playerDistance <= detectionRange){
+            Quaternion rotation = transform.rotation;
+            transform.LookAt(player);
+            RaycastHit hit;
+            Physics.Raycast(transform.position, transform.rotation * Vector3.forward, out hit, 100.0f);
+            try {
+                if(hit.transform.gameObject.layer == playerLayer){
+                    playerLastPosition = player.position;
+                    Debug.Log("Hit Player");
+                }else{
+                    Debug.Log("No line of sight (A)");
+                }
+            }
+            catch { Debug.Log("No line of sight (B)"); }
+            transform.rotation = rotation;
+            transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
         }
-        transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
     }
     #endregion
 
