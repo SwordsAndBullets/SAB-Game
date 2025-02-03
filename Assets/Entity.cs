@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-//DEBUG.LOGs for testing, remove when tested.
-
 public class Entity : MonoBehaviour
 {
-    [Header("Entity Stats")]
     public float health { get; private set; }
     
-    [Header("Core Stats")]
     public float speed { get; private set; }
     public float strength {get; private set;}
     public float Distance {get; private set;}
 
-    [Header("Data")]
     private float dotTimer = 0;
     private float dotDamage = 0;
     private float maxHealth = 0;
@@ -28,20 +23,20 @@ public class Entity : MonoBehaviour
         }//Initiate DOT
         else {
             health -= amount;
-            Dbug.Log("Took " + amount + " damage!");
+            Debug.Log("Took " + amount + " damage!");
         }
 
         //Check health state
         if (health >= maxHealth){
             health = maxHealth;
-        else if (health <= 0){
+        }else if (health <= 0){
             DestroySelf();
         }
     }
     private void DestroySelf(){
         Debug.Log("Health at 0... Destroyed.");
         //Any animations and stuff for when dying here
-        gameObject.setActive(false);
+        gameObject.SetActive(false);
     }
 
     public void Start(){
