@@ -62,8 +62,8 @@ public class Movement : MonoBehaviour
     private void ResetDefaults()
     {
         //SetValues Based On Agility
-        jumpChargesBase = 1 + (player.agility / 50);
-        movementSpeed = baseSpeed + ((baseSpeed / 2) * (player.agility / 100));
+        jumpChargesBase = 1 + (player.speed / 50);
+        movementSpeed = baseSpeed + ((baseSpeed / 2) * (player.speed / 100));
         jumpHeight = baseJump;
     }
     #endregion
