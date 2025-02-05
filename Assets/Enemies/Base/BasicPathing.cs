@@ -15,6 +15,8 @@ public class BasicPathing : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
 
     private float groundLevel;
+    private Ray checkRayCast;
+    private Vector3 rayCastOffset = new Vector3(0, 1.0f, 0);
 
     [Header("States")]
     public int state = 0; //0-Patrolling, 1-Chasing, 2-Attacking
@@ -30,7 +32,6 @@ public class BasicPathing : MonoBehaviour
     [SerializeField] private float detectionRange;
     [SerializeField] private float chaseSpeed;
     private Vector3 playerLastPosition;
-    private bool playerPosKnown = false;
 
     [Header("2-Attacking")]
     [SerializeField] private Item equippedItem;
@@ -45,6 +46,22 @@ public class BasicPathing : MonoBehaviour
             case 0: Patrolling(); break;
             case 1: Chasing(); break;
             case 2: Attacking(); break;
+        }
+    }
+    private void OnDrawGizmos(){
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(movePoint, 0.5f);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, moveRange);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.color = Color.red;
+        try{Gizmos.DrawWireSphere(transform.position, equippedItem.distance);}
+        catch{}
+        switch (state){
+            case 0: Gizmos.color = Color.green; Gizmos.DrawRay(checkRayCast); break;
+            case 1: Gizmos.color = Color.blue; Gizmos.DrawRay(checkRayCast); break;
+            case 2: Gizmos.color = Color.red; Gizmos.DrawRay(checkRayCast); break;
         }
     }
 
@@ -73,7 +90,8 @@ public class BasicPathing : MonoBehaviour
             float randomZ = Random.Range((transform.position.z - moveRange), (transform.position.z + moveRange));//Gen Random Z
             RaycastHit hit;
             point = new Vector3(randomX, transform.position.y + 10f, randomZ);
-            Physics.Raycast(point, Vector3.down, out hit, Mathf.Infinity, walkableLayer);//Find Y Level of AI walkable ground
+            checkRayCast = new Ray(point, Vector3.down);
+            Physics.Raycast(checkRayCast, out hit, Mathf.Infinity, walkableLayer);//Find Y Level of AI walkable ground
             point = new Vector3(point.x, hit.transform.position.y + 0.1f, point.z);
             
             if(!Physics.CheckSphere(point, 1f, obstacleLayer) && Physics.CheckSphere(point, 1f, walkableLayer)){
@@ -83,33 +101,29 @@ public class BasicPathing : MonoBehaviour
         }
     }
     private bool CheckObstaclesInFront(float range){
-        Quaternion rotation = transform.rotation;
-        transform.LookAt(playerLastPosition);
-        bool result = Physics.Raycast(transform.position, transform.rotation * Vector3.forward, range, obstacleLayer);
-        transform.rotation = rotation;
+        bool result = Physics.Raycast(transform.position, GetDirectionTo(playerLastPosition), range, obstacleLayer);
         return result;
     }//Check for obstacles in obstacle layer in front of self by specified range.
     #endregion
 
     #region Chasing
     private void Chasing(){
-        if(playerDistance <= detectionRange){
-            Quaternion rotation = transform.rotation;
-            transform.LookAt(player);
-            RaycastHit hit;
-            Physics.Raycast(transform.position, transform.rotation * Vector3.forward, out hit, 100.0f);
-            try {
-                if(hit.transform.gameObject.layer == playerLayer){
-                    playerLastPosition = player.position;
-                    Debug.Log("Hit Player");
-                }else{
-                    Debug.Log("No line of sight (A)");
-                }
+        SetPlayerLastPosition();
+        transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
+    }
+    private void SetPlayerLastPosition(){
+        RaycastHit hit;
+        checkRayCast = new Ray(transform.position + rayCastOffset, GetDirectionTo(player.transform.position));
+        Physics.Raycast(checkRayCast, out hit, 100.0f);
+        try {
+            if(hit.transform.name == player.name){
+                playerLastPosition = player.transform.position;
+                Debug.Log(playerLastPosition);
+            }else{
+                Debug.Log("No line of sight: " + hit.transform.name);
             }
-            catch { Debug.Log("No line of sight (B)"); }
-            transform.rotation = rotation;
-            transform.position = Vector3.MoveTowards(transform.position, playerLastPosition, chaseSpeed * Time.deltaTime);
         }
+        catch { Debug.Log("No line of sight (Nothing hit)"); }
     }
     #endregion
 
@@ -124,5 +138,8 @@ public class BasicPathing : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(transform.position + new Vector3(0,0.1f,0), Vector3.down, out hit, Mathf.Infinity, walkableLayer);
         groundLevel = hit.point.y;
+    }
+    private Vector3 GetDirectionTo(Vector3 target){
+        return (target - transform.position).normalized;
     }
 }
