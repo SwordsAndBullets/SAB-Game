@@ -14,8 +14,8 @@ TagManager:
   - UI
   - Ground
   - ViewModel
-  - 
-  - 
+  - AI_Walkable
+  - AI_Obstacle
   - 
   - 
   - 
@@ -37,7 +37,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Post Process Volume
   m_SortingLayers:
   - name: Default
     uniqueID: 0

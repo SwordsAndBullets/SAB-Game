@@ -752,7 +752,7 @@ GameObject:
   - component: {fileID: 630746729}
   - component: {fileID: 630746732}
   m_Layer: 6
-  m_Name: Plane
+  m_Name: LevelGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1978,7 +1978,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 213757026412541193, guid: 3e99a6cabf8294446b906b81fbdb3993, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e99a6cabf8294446b906b81fbdb3993, type: 3}
