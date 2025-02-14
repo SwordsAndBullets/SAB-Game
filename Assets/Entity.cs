@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] public Item EquippedItem {get; private set;}
+    public SingleplayerItem EquippedItem;
 
     public float health { get; private set; }
     public float speed { get; private set; }

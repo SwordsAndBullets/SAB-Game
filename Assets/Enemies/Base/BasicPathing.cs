@@ -45,6 +45,7 @@ public class BasicPathing : MonoBehaviour
             case 2: Attacking(); break;
         }
     }
+    #region Gizmos
     private void OnDrawGizmos(){
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(movePoint, 0.5f);
@@ -61,6 +62,7 @@ public class BasicPathing : MonoBehaviour
             case 2: Gizmos.color = Color.red; Gizmos.DrawRay(checkRayCast); break;
         }
     }
+    #endregion
 
     #region Patrolling
     private void Patrolling(){
