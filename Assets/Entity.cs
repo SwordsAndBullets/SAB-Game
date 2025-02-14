@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
+    [SerializeField] public Item EquippedItem {get; private set;}
+
     public float health { get; private set; }
     public float speed { get; private set; }
     public float strength {get; private set;}
@@ -36,6 +38,9 @@ public class Entity : MonoBehaviour
         Debug.Log("Health at 0... Destroyed.");
         //Any animations and stuff for when dying here
         gameObject.SetActive(false);
+    }
+    private void UseEquippedItem(){
+        EquippedItem.Use(this.transform, this);//Target self as default for now as only consumables implemented with targets.
     }
 
     public void Start(){
