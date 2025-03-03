@@ -525,6 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EquippedItem: {fileID: 0}
+  SecondaryItem: {fileID: 0}
   health: 10
 --- !u!4 &1347872796
 Transform:
@@ -718,7 +719,11 @@ PrefabInstance:
     - target: {fileID: 213757026412541310, guid: 3e99a6cabf8294446b906b81fbdb3993, type: 3}
       propertyPath: EquippedItem
       value: 
-      objectReference: {fileID: 1769133112}
+      objectReference: {fileID: 1769133113}
+    - target: {fileID: 213757026412541310, guid: 3e99a6cabf8294446b906b81fbdb3993, type: 3}
+      propertyPath: SecondaryItem
+      value: 
+      objectReference: {fileID: 1769133113}
     - target: {fileID: 213757027229249462, guid: 3e99a6cabf8294446b906b81fbdb3993, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 2181039095
@@ -775,6 +780,25 @@ MonoBehaviour:
   ignorePlayer:
     serializedVersion: 2
     m_Bits: 2181039095
+--- !u!114 &1769133113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242392208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c22993f9b3ee94aaffc5920cbd8007, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  strength: 2
+  distance: 0
+  type: health consumable
+  ignorePlayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1999287116
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,16 +22,16 @@ public class SingleplayerItem : MonoBehaviour
         distance = di;
     }
     
-    public void Use(Transform Origin, Entity Target = null){
+    public void Use(Transform Origin, Entity Target){
         switch (this.type.ToLower()){
-            case "health Consumable": HealthConsumableUse(Target); break;
+            case "health consumable": HealthConsumableUse(Target); break;
             case "pistol": PistolUse(Origin); break;
             default: Debug.Log("Generic type."); break;
         }
     }
 
     #region Use Functions
-    private void HealthConsumableUse(Entity Target = null){
+    private void HealthConsumableUse(Entity Target){
         UseDelayTimer = this.speed;
         if(distance > 0){ Target.TakeDamage(this.strength, this.distance); }
         else { Target.TakeDamage(this.strength); }
@@ -40,7 +40,7 @@ public class SingleplayerItem : MonoBehaviour
     private void PistolUse(Transform Origin){
         if (!(UseDelayTimer > 0)) {
             RaycastHit hit;
-            Physics.Raycast(Origin.position, Vectro3.Forward, out hit, this.distance, ignorePlayer);
+            Physics.Raycast(Origin.position, Vector3.forward, out hit, this.distance, ignorePlayer);
             try{ hit.transform.GetComponent<Entity>().TakeDamage(this.strength); Debug.Log("[Pistol] " + hit.transform.name + " hit"); }
             catch{ Debug.Log("[Pistol] Nothing Hit"); }
             UseDelayTimer = 1/(speed/60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)

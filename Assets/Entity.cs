@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class Entity : MonoBehaviour
 {
     public SingleplayerItem EquippedItem;
-    public SinglePlayerItem SecondaryItem;
+    public SingleplayerItem SecondaryItem;
 
     [SerializeField] private float health = 10.0f;
     public float speed { get; private set; }
