@@ -46,6 +46,10 @@ public class Movement : MonoBehaviour
         //Inputs
         if (Input.GetButtonDown("Jump")) { Jump(); }
         if (isGrounded || isJumping) { moveInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); }
+
+        //Using items
+        if (Input.GetButtonDown("Primary Fire")) { player.EquippedItem.Use(this.transform); }
+        if (Input.GetButtonDown("Secondary Fire")) { player.EquippedItem.Use(this.transform); }
     }
     private void FixedUpdate()
     {

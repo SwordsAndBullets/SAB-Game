@@ -92,7 +92,7 @@ public class BasicPathing : MonoBehaviour
             checkRayCast = new Ray(point, Vector3.down);
             Physics.Raycast(checkRayCast, out hit, Mathf.Infinity, walkableLayer);//Find Y Level of AI walkable ground
             try{ point = new Vector3(point.x, hit.transform.position.y + 0.1f, point.z); }
-            catch{ Debug.Log("[AI] Above void");}
+            catch{ int placeholderaakjsoiusdba = 0; }
             
             if(!Physics.CheckSphere(point, 1f, obstacleLayer) && Physics.CheckSphere(point, 1f, walkableLayer)){
                 movePoint = point;

@@ -13,19 +13,20 @@ public class Player : MonoBehaviour
 
     [Header("----References----")]
     [SerializeField] WebFunctions wf;
+    [SerializeField] Entity playerEntity;
 
     private void Start() {
         if (username != "" || username != null){
-            GetPlayerInfoStarter(username, password);
+            GetPlayerInfoStarter();
         }
     }
 
-    public void GetPlayerInfoStarter(string username, string password){
-        StartCoroutine(GetPlayerInfo(username, password));
+    public void GetPlayerInfoStarter(){
+        StartCoroutine(GetPlayerInfo(username, password, this));
     }
 
     #region WebFunctions
-    IEnumerator GetPlayerInfo(string username, string password){
+    IEnumerator GetPlayerInfo(string username, string password, Player p){
         string result = "";
         WWWForm details = new WWWForm();
         details.AddField("username", username);
@@ -42,10 +43,17 @@ public class Player : MonoBehaviour
         Debug.Log(result);
         //Assign Player Data
         string[] playerData = result.Split("/");
-        username = playerData[2];
-        password = playerData[3];
-        id = int.Parse(playerData[1]);
-        xp = int.Parse(playerData[5]);
+        switch (playerData[0]){
+            case "private":
+                p.id = int.Parse(playerData[1]);
+                p.username = playerData[2];
+                p.password = playerData[3];
+                p.xp = int.Parse(playerData[5]);
+                break;
+            case "public":
+                Debug.Log(result);
+                break;
+        }
     }
     #endregion
 }

@@ -12,6 +12,8 @@ public class SingleplayerItem : MonoBehaviour
     public float distance;
     public string type;
 
+    [SerializeField] private LayerMask ignorePlayer;
+
     private float UseDelayTimer = 0.0f;
 
     public SingleplayerItem(float sp, float st, float di){
@@ -22,8 +24,8 @@ public class SingleplayerItem : MonoBehaviour
     
     public void Use(Transform Origin, Entity Target = null){
         switch (this.type.ToLower()){
-            case "Health Consumable": HealthConsumableUse(Target); break;
-            case "Pistol": PistolUse(Origin); break;
+            case "health Consumable": HealthConsumableUse(Target); break;
+            case "pistol": PistolUse(Origin); break;
             default: Debug.Log("Generic type."); break;
         }
     }
@@ -36,17 +38,17 @@ public class SingleplayerItem : MonoBehaviour
     }
 
     private void PistolUse(Transform Origin){
-        if (UseDelayTimer !> 0){
+        if (!(UseDelayTimer > 0)) {
             RaycastHit hit;
-            Physics.Raycast(Origin.position, Vector3.forward, out hit, this.distance);
-            try{ hit.transform.GetComponent<Entity>().TakeDamage(this.strength); }
-            catch{ Debug.Log("Nothing Hit"); }
-            Debug.Log("Pistol shot");
+            Physics.Raycast(Origin.position, Vectro3.Forward, out hit, this.distance, ignorePlayer);
+            try{ hit.transform.GetComponent<Entity>().TakeDamage(this.strength); Debug.Log("[Pistol] " + hit.transform.name + " hit"); }
+            catch{ Debug.Log("[Pistol] Nothing Hit"); }
             UseDelayTimer = 1/(speed/60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)
         }
+        else { Debug.Log("[Pistol] Not Ready"); }
     }
     #endregion
-
+    
     private void Update(){
         if(UseDelayTimer > 0){ UseDelayTimer -= Time.deltaTime; }
     }
