@@ -5,9 +5,13 @@ using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
+    [Header("Items")]
     public SingleplayerItem EquippedItem;
     public SingleplayerItem SecondaryItem;
+    [SerializeField] private GameObject PrimaryItemHand;
+    [SerializeField] private GameObject SecondaryItemHand;
 
+    [Header("Stats")]
     [SerializeField] private float health = 10.0f;
     public float speed { get; private set; }
     public float strength {get; private set;}
@@ -53,6 +57,7 @@ public class Entity : MonoBehaviour
 
     public void Start(){
         maxHealth = health;
+        EquippedItem.ModelSwap(PrimaryItemHand);
     }
     public void Update(){
         if (dotTimer > 0){

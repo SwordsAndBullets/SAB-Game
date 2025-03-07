@@ -118,9 +118,6 @@ public class BasicPathing : MonoBehaviour
         try {
             if(hit.transform.name == player.name){
                 playerLastPosition = player.transform.position;
-                Debug.Log(playerLastPosition);
-            }else{
-                Debug.Log("No line of sight: " + hit.transform.name);
             }
         }
         catch { Debug.Log("No line of sight (Nothing hit)"); }
