@@ -15,7 +15,7 @@ public class Entity : MonoBehaviour
     [SerializeField] private GameObject SecondaryItemHand;
 
     [Header("Stats")]
-    [SerializeField] private float health = 10.0f;
+    public float health = 10.0f;
     public float speed { get; private set; }
     public float strength {get; private set;}
     public float distance {get; private set;}

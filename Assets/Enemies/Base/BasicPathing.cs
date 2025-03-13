@@ -127,7 +127,7 @@ public class BasicPathing : MonoBehaviour
     #region Attacking
     private void Attacking(){
         Debug.Log("Attacking");
-        gameObject.GetComponent<Entity>().EquippedItem.Use(this.transform, gameObject.GetComponent<Entity>());
+        gameObject.GetComponent<Entity>().EquippedItem.Use(this.transform, playerEntity, false);
     }
     #endregion
 

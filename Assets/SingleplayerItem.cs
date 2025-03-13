@@ -23,10 +23,10 @@ public class SingleplayerItem : MonoBehaviour
         distance = di;
     }
     
-    public void Use(Transform Origin, Entity Target){
+    public void Use(Transform Origin, Entity Target, bool playerUse = true){
         switch (this.type.ToLower()){
             case "health consumable": HealthConsumableUse(Target); break;
-            case "pistol": PistolUse(Origin); break;
+            case "pistol": PistolUse(Origin, Target, playerUse); break;
             default: Debug.Log("Generic type."); break;
         }
     }
@@ -56,14 +56,20 @@ public class SingleplayerItem : MonoBehaviour
         else { Target.TakeDamage(this.strength); }
     }
 
-    private void PistolUse(Transform Origin){
+    private void PistolUse(Transform Origin, Entity Target = null, bool playerUse = true){
         if (!(UseDelayTimer > 0)) {
-            RaycastHit hit;
-            Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ignorePlayer);
-            Debug.Log("[Pistol] Hit " + hit.transform.name);
-            try { hit.transform.gameObject.GetComponent<Entity>().TakeDamage(this.strength); }
-            catch { Debug.Log("[Pistol] Not an entity"); }
-            UseDelayTimer = 1/(speed/60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)
+            if (playerUse == true){
+                RaycastHit hit;
+                Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ignorePlayer);
+                Debug.Log("[Pistol] Hit " + hit.transform.name);
+                try { hit.transform.gameObject.GetComponent<Entity>().TakeDamage(this.strength); }
+                catch { Debug.Log("[Pistol] Not an entity"); }
+            }
+            else{
+                Debug.Log("[Pistol::NonPlayer] Hit " + Target.name);
+                Target.TakeDamage(this.strength);
+            }//Use this if item equipped to a non-player entity.
+            UseDelayTimer = 1/(this.speed/60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)
         }
         else { Debug.Log("[Pistol] Not Ready"); }
     }
