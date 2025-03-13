@@ -33,13 +33,10 @@ public class BasicPathing : MonoBehaviour
     [SerializeField] private float chaseSpeed;
     private Vector3 playerLastPosition;
 
-    [Header("2-Attacking")]
-    [SerializeField] private Item equippedItem;
-
     private void Update() {
         SetGroundLevel();
         playerDistance = Vector3.Distance(transform.position, player.position);
-        try { state = (playerDistance <= detectionRange) ? ((playerDistance <= equippedItem.distance) || (playerDistance <= 1)) ? 2 : 1 : 0; }
+        try { state = (playerDistance <= detectionRange) ? ((playerDistance <= gameObject.GetComponent<Entity>().EquippedItem.distance) || (playerDistance <= 1)) ? 2 : 1 : 0; }
         catch { state = (playerDistance <= detectionRange) ? 1 : 0; }
 
         switch (state){
@@ -48,6 +45,7 @@ public class BasicPathing : MonoBehaviour
             case 2: Attacking(); break;
         }
     }
+    #region Gizmos
     private void OnDrawGizmos(){
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(movePoint, 0.5f);
@@ -56,7 +54,7 @@ public class BasicPathing : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
         Gizmos.color = Color.red;
-        try{Gizmos.DrawWireSphere(transform.position, equippedItem.distance);}
+        try{Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<Entity>().EquippedItem.distance);}
         catch{}
         switch (state){
             case 0: Gizmos.color = Color.green; Gizmos.DrawRay(checkRayCast); break;
@@ -64,6 +62,7 @@ public class BasicPathing : MonoBehaviour
             case 2: Gizmos.color = Color.red; Gizmos.DrawRay(checkRayCast); break;
         }
     }
+    #endregion
 
     #region Patrolling
     private void Patrolling(){
@@ -92,7 +91,8 @@ public class BasicPathing : MonoBehaviour
             point = new Vector3(randomX, transform.position.y + 10f, randomZ);
             checkRayCast = new Ray(point, Vector3.down);
             Physics.Raycast(checkRayCast, out hit, Mathf.Infinity, walkableLayer);//Find Y Level of AI walkable ground
-            point = new Vector3(point.x, hit.transform.position.y + 0.1f, point.z);
+            try{ point = new Vector3(point.x, hit.transform.position.y + 0.1f, point.z); }
+            catch{ int placeholderaakjsoiusdba = 0; }
             
             if(!Physics.CheckSphere(point, 1f, obstacleLayer) && Physics.CheckSphere(point, 1f, walkableLayer)){
                 movePoint = point;
@@ -118,9 +118,6 @@ public class BasicPathing : MonoBehaviour
         try {
             if(hit.transform.name == player.name){
                 playerLastPosition = player.transform.position;
-                Debug.Log(playerLastPosition);
-            }else{
-                Debug.Log("No line of sight: " + hit.transform.name);
             }
         }
         catch { Debug.Log("No line of sight (Nothing hit)"); }
@@ -130,7 +127,7 @@ public class BasicPathing : MonoBehaviour
     #region Attacking
     private void Attacking(){
         Debug.Log("Attacking");
-        equippedItem.Use(playerEntity);
+        gameObject.GetComponent<Entity>().EquippedItem.Use(this.transform, playerEntity, false);
     }
     #endregion
 

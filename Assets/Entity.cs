@@ -5,7 +5,17 @@ using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
-    public float health { get; private set; }
+
+    [SerializeField] private LayerMask playerLayer;
+
+    [Header("Items")]
+    public SingleplayerItem EquippedItem;
+    public SingleplayerItem SecondaryItem;
+    [SerializeField] private GameObject PrimaryItemHand;
+    [SerializeField] private GameObject SecondaryItemHand;
+
+    [Header("Stats")]
+    public float health = 10.0f;
     public float speed { get; private set; }
     public float strength {get; private set;}
     public float distance {get; private set;}
@@ -13,6 +23,12 @@ public class Entity : MonoBehaviour
     private float dotTimer = 0;
     private float dotDamage = 0;
     private float maxHealth = 0;
+    
+    public void SetStats(int sp, int st, int di){
+        speed = sp;
+        strength = st;
+        distance = di;
+    }
 
     public void TakeDamage(float amount, float time = 0){
         if (time > 0){
@@ -37,11 +53,21 @@ public class Entity : MonoBehaviour
         //Any animations and stuff for when dying here
         gameObject.SetActive(false);
     }
+    private void UseEquippedItem(bool secondary = false){
+        Collider temporaryPlayer = Physics.OverlapSphere(transform.position, EquippedItem.distance)[0];
+        Debug.Log("[Enemy] hit " + temporaryPlayer.name);
+        Entity tempPlayer = temporaryPlayer.transform.gameObject.GetComponent<Entity>();
+        transform.LookAt(tempPlayer.transform.position);//Aim at player
+        if(secondary){ EquippedItem.Use(this.transform, tempPlayer); }
+        else { EquippedItem.Use(this.transform, tempPlayer); }//Target self as player for now as only consumables implemented with targets.
+    }
 
     public void Start(){
         maxHealth = health;
+        EquippedItem.ModelSwap(PrimaryItemHand);
     }
     public void Update(){
+        
         if (dotTimer > 0){
             TakeDamage(dotDamage * Time.deltaTime);
             Debug.Log("Taking DOT: " + dotDamage + " --> " + this.health);
