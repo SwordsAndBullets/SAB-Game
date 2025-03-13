@@ -66,7 +66,6 @@ public class SingleplayerItem : MonoBehaviour
             UseDelayTimer = 1/(speed/60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)
         }
         else { Debug.Log("[Pistol] Not Ready"); }
-    }
     #endregion
     
     private void Update(){
