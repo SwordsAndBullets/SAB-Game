@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class GeneratorTestLevel : MonoBehaviour
 {
-    [SerializeField] int GridSize;//How many tiles will be generated to the left of the spawn. (Half the map's width).
+    [Header("Set")]
     [SerializeField] string GeneratorTileset;
-    [SerializeField] Object[] tiles;
     [SerializeField] GameObject SpawnTile;
 
+    private Object[] tiles;
     private Object[] edgeTiles;
     private Object[] normalTiles;
     private Object[] ruleTiles;
@@ -17,6 +17,9 @@ public class GeneratorTestLevel : MonoBehaviour
 
     private System.Random rnd;
 
+    [Header("Rates")]
+    [Range(5, 100)]
+    [SerializeField] int GridSize;//How many tiles will be generated to the left of the spawn. (Half the map's width).
     [Range(5, 0)]
     public double ruleSpawnRate = 1;
 
