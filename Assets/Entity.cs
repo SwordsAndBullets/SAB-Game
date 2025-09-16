@@ -9,8 +9,8 @@ public class Entity : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
 
     [Header("Items")]
-    public SingleplayerItem EquippedItem;
-    public SingleplayerItem SecondaryItem;
+    public Item EquippedItem;
+    public Item SecondaryItem;
     [SerializeField] private GameObject PrimaryItemHand;
     [SerializeField] private GameObject SecondaryItemHand;
 
@@ -58,8 +58,8 @@ public class Entity : MonoBehaviour
         Debug.Log("[Enemy] hit " + temporaryPlayer.name);
         Entity tempPlayer = temporaryPlayer.transform.gameObject.GetComponent<Entity>();
         transform.LookAt(tempPlayer.transform.position);//Aim at player
-        if(secondary){ EquippedItem.Use(this.transform, tempPlayer); }
-        else { EquippedItem.Use(this.transform, tempPlayer); }//Target self as player for now as only consumables implemented with targets.
+        if(secondary){ EquippedItem.Use(this.transform, tempPlayer, false); }
+        else { EquippedItem.Use(this.transform, tempPlayer, false); }//Target self as player for now as only consumables implemented with targets.
     }
 
     public void Start(){
@@ -67,7 +67,6 @@ public class Entity : MonoBehaviour
         EquippedItem.ModelSwap(PrimaryItemHand);
     }
     public void Update(){
-        
         if (dotTimer > 0){
             TakeDamage(dotDamage * Time.deltaTime);
             Debug.Log("Taking DOT: " + dotDamage + " --> " + this.health);
