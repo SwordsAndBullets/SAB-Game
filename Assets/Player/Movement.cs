@@ -48,8 +48,8 @@ public class Movement : MonoBehaviour
         if (isGrounded || isJumping) { moveInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); }
 
         //Using items
-        if (Input.GetButtonDown("Primary Fire")) { player.EquippedItem.Use(player.transform, player); }
-        if (Input.GetButtonDown("Secondary Fire")) { player.SecondaryItem.Use(player.transform, player); }
+        if (Input.GetButtonDown("Primary Fire")) { player.equippedItem.Use(player); }
+        if (Input.GetButtonDown("Secondary Fire")) { player.secondaryItem.Use(player); }
     }
     private void FixedUpdate()
     {

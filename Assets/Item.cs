@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class Item : MonoBehaviour
 {
@@ -18,7 +14,7 @@ public class Item : MonoBehaviour
     [SerializeField] private LayerMask ignorePlayer;
     Transform gunHitPosition;
 
-    private float UseDelayTimer = 0.0f;
+    private float useDelayTimer;
 
     public Item(float sp, float st, float di)
     {
@@ -27,23 +23,23 @@ public class Item : MonoBehaviour
         distance = di;
     }
 
-    public void Use(Transform Origin, Entity Target, bool playerUse = true)
+    public void Use(Entity target)
     {
         switch (this.type.ToLower())
         {
-            case "health consumable": HealthConsumableUse(Target); break;
-            case "pistol": PistolUse(Origin, Target, playerUse); break;
+            case "health consumable": HealthConsumableUse(target); break;
+            case "pistol": PistolUse(target); break;
             default: Debug.Log("Generic type."); break;
         }
     }
 
-    public void ModelSwap(GameObject Hand)
+    public void ModelSwap(GameObject hand)
     {
         string modelName = this.transform.gameObject.name.ToLower();
         modelName = "ItemModels/Prefabs/" + modelName;
         //Get path to resources folder.
         //Models in folder must be lower case named.
-        UnityEngine.Object model;
+        Object model;
         Debug.Log("[Item] Model path: " + modelName);
         try
         {
@@ -54,23 +50,23 @@ public class Item : MonoBehaviour
             model = Resources.Load("ItemModels/Prefabs/default");
             //Revert to default if there is no model.
         }
-        Instantiate(model, Hand.transform);
+        Instantiate(model, hand.transform);
         //Load item in scene.
     }
 
     #region Use Functions
-    private void HealthConsumableUse(Entity Target)
+    private void HealthConsumableUse(Entity target)
     {
-        UseDelayTimer = this.speed;
-        if (distance > 0) { Target.TakeDamage(this.strength, this.distance); }
-        else { Target.TakeDamage(this.strength); }
+        useDelayTimer = this.speed;
+        if (distance > 0) { target.TakeDamage(this.strength, this.distance); }
+        else { target.TakeDamage(this.strength); }
     }
 
-    private void PistolUse(Transform Origin, Entity Target = null, bool playerUse = true)
+    private void PistolUse(Entity target = null)
     {
-        if (!(UseDelayTimer > 0))
+        if (!(useDelayTimer > 0))
         {
-            if (playerUse == true)
+            if (target != null)
             {
                 RaycastHit hit;
                 Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, ignorePlayer);
@@ -80,10 +76,10 @@ public class Item : MonoBehaviour
             }
             else
             {
-                Debug.Log("[Pistol::NonPlayer] Hit " + Target.name);
-                Target.TakeDamage(this.strength);
+                Debug.Log("[Pistol::NonPlayer] Hit " + target.name);
+                target.TakeDamage(this.strength);
             }//Use this if item equipped to a non-player entity.
-            UseDelayTimer = 1 / (this.speed / 60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)
+            useDelayTimer = 1 / (this.speed / 60); //Speed = rpm, speed/60 = frequency(Hz), 1/f = T(s)
         }
         else { Debug.Log("[Pistol] Not Ready"); }
     }
@@ -91,12 +87,6 @@ public class Item : MonoBehaviour
 
     private void Update()
     {
-        if (UseDelayTimer > 0) { UseDelayTimer -= Time.deltaTime; }
-    }
-    
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(trace);
+        if (useDelayTimer > 0) { useDelayTimer -= Time.deltaTime; }
     }
 }

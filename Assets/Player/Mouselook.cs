@@ -7,7 +7,7 @@ public class Mouselook : MonoBehaviour
     private Transform Head;
     private Transform Body;
 
-    public float sensitivity = 400f;
+    public float sensitivity = 200f;
 
     private float mouseX = 0;
     private float mouseY = 0;

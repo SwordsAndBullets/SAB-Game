@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Entity : MonoBehaviour
 {
@@ -9,10 +6,10 @@ public class Entity : MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
 
     [Header("Items")]
-    public Item EquippedItem;
-    public Item SecondaryItem;
-    [SerializeField] private GameObject PrimaryItemHand;
-    [SerializeField] private GameObject SecondaryItemHand;
+    public Item equippedItem;
+    public Item secondaryItem;
+    [SerializeField] private GameObject primaryHand;
+    [SerializeField] private GameObject offHand;
 
     [Header("Stats")]
     public float health = 10.0f;
@@ -20,9 +17,9 @@ public class Entity : MonoBehaviour
     public float strength {get; private set;}
     public float distance {get; private set;}
 
-    private float dotTimer = 0;
-    private float dotDamage = 0;
-    private float maxHealth = 0;
+    private float dotTimer;
+    private float dotDamage;
+    private float maxHealth;
     
     public void SetStats(int sp, int st, int di){
         speed = sp;
@@ -53,25 +50,17 @@ public class Entity : MonoBehaviour
         //Any animations and stuff for when dying here
         gameObject.SetActive(false);
     }
-    private void UseEquippedItem(bool secondary = false){
-        Collider temporaryPlayer = Physics.OverlapSphere(transform.position, EquippedItem.distance)[0];
-        Debug.Log("[Enemy] hit " + temporaryPlayer.name);
-        Entity tempPlayer = temporaryPlayer.transform.gameObject.GetComponent<Entity>();
-        transform.LookAt(tempPlayer.transform.position);//Aim at player
-        if(secondary){ EquippedItem.Use(this.transform, tempPlayer, false); }
-        else { EquippedItem.Use(this.transform, tempPlayer, false); }//Target self as player for now as only consumables implemented with targets.
-    }
 
     public void Start(){
         maxHealth = health;
-        EquippedItem.ModelSwap(PrimaryItemHand);
+        equippedItem.ModelSwap(primaryHand);
     }
     public void Update(){
         if (dotTimer > 0){
             TakeDamage(dotDamage * Time.deltaTime);
             Debug.Log("Taking DOT: " + dotDamage + " --> " + this.health);
             dotTimer -= Time.deltaTime;
-            //DOT independant of frame rate so ppl with 1000fps dont just phase out of existence.
+            //DOT independent of frame rate so ppl with 1000fps dont just phase out of existence.
         }
     }
 }

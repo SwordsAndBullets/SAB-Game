@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +8,11 @@ public class LoginScreen : MonoBehaviour
     [SerializeField] WebFunctions webFunctions;
     [SerializeField] CursorManager cursorManager;
     //UI Elements
-    [SerializeField] Text UsernameText;
-    [SerializeField] Text PasswordText;
-    [SerializeField] Text ErrorMessageText;
+    [SerializeField] Text usernameText;
+    [SerializeField] Text passwordText;
+    [SerializeField] Text errorMessageText;
     //Game Objects
-    [SerializeField] GameObject LoginObj;
+    [SerializeField] GameObject loginObject;
     [SerializeField] Player player;
     [SerializeField] GameObject playerObj;
 
@@ -24,27 +22,24 @@ public class LoginScreen : MonoBehaviour
 
     public void LoginButton()
     {
-        username = UsernameText.text;
-        password = PasswordText.text;
+        username = usernameText.text;
+        password = passwordText.text;
         webFunctions.LoginStarter(username, password);
         cursorManager.Set("loading");
     }
     public void LoginResult(string result)
     {
-        ErrorMessageText.text = result;
+        errorMessageText.text = result;
         cursorManager.Set();
 
         if (result == "Login Success!") { LoginSuccess(); }
     }
-    public void LoginSuccess(){
+    private void LoginSuccess(){
         
-        player.username = username;
-        player.password = password;
+        player.name = username;
+        player.login = password;
 
         playerObj.SetActive(true);
-        LoginObj.SetActive(false);
-    }
-    private void Start() {
-        
+        loginObject.SetActive(false);
     }
 }
